@@ -1,9 +1,12 @@
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
+import 'package:new_app/core/helper/api.dart';
 import 'package:new_app/pages/Home/height_widget.dart';
 import 'package:new_app/pages/Home/spo2.dart';
 import 'package:new_app/pages/Home/weight.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'Age.dart';
+import 'age.dart';
 import 'BMICalculator.dart.dart';
 import 'heart_widget.dart';
 
@@ -20,6 +23,10 @@ class _HomePageState extends State<HomePage> {
   double height = 170.0;
   int weight = 70;
   String userName = "";
+  int age = 0;
+  int heartRate = 150; // Initial heart rate, will be updated dynamically
+  String emotion = "Happy"; // Initial emotion, will be updated dynamically
+  final ApiService apiService = ApiService();
 
   @override
   void initState() {
@@ -32,6 +39,26 @@ class _HomePageState extends State<HomePage> {
     setState(() {
       userName = prefs.getString('currentUserName') ?? 'User';
     });
+  }
+
+  Future<void> _fetchData() async {
+    final List<Map<String, dynamic>> requestData = [
+      {"Heart Rate": heartRate, "Age": age}
+    ];
+    try {
+      final responseData = await apiService.postEmotion(requestData);
+      setState(() {
+        emotion = responseData[0]['Emotion'];
+      });
+
+      if (emotion != "Happy" && emotion != "Normal") {
+        await apiService.sendNotification(
+            "The user's emotion is $emotion based on current heart rate and age.");
+        log(emotion);
+      }
+    } catch (e) {
+      log('Error: $e');
+    }
   }
 
   @override
@@ -97,7 +124,7 @@ class _HomePageState extends State<HomePage> {
                       fontWeight: FontWeight.w700),
                 ),
                 const SizedBox(height: 20),
-                const HeartRateWidget(),
+                HeartRateWidget(heartRate: heartRate, emotion: emotion),
                 const SizedBox(height: 20),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.center,
@@ -143,7 +170,14 @@ class _HomePageState extends State<HomePage> {
                       margin: const EdgeInsets.only(top: 5),
                       child: SizedBox(
                           width: MediaQuery.of(context).size.width * 0.4,
-                          child: const AgeWidget()),
+                          child: AgeWidget(
+                            onAgeChanged: (newAge) {
+                              setState(() {
+                                age = newAge;
+                                _fetchData(); // Fetch data whenever age changes
+                              });
+                            },
+                          )),
                     ),
                   ],
                 ),

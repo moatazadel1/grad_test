@@ -15,7 +15,7 @@ void main() async {
   await FlutterConfig.loadEnvVariables();
 
   WidgetsFlutterBinding.ensureInitialized();
-  await Firebase.initializeApp(
+await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
   );
 

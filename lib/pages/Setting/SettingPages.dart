@@ -6,6 +6,7 @@ import 'Widget/Button.dart';
 import 'Widget/setting_item.dart';
 import 'Widget/setting_widget.dart';
 import 'edit_profile.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class AccountScreen extends StatefulWidget {
   const AccountScreen({super.key});
@@ -15,7 +16,20 @@ class AccountScreen extends StatefulWidget {
 }
 
 class _AccountScreenState extends State<AccountScreen> {
+  String userName = "";
   bool isDarkMode = false;
+  @override
+  void initState() {
+    super.initState();
+    _loadUserName();
+  }
+
+  Future<void> _loadUserName() async {
+    final prefs = await SharedPreferences.getInstance();
+    setState(() {
+      userName = prefs.getString('currentUserName') ?? 'User';
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -53,20 +67,21 @@ class _AccountScreenState extends State<AccountScreen> {
                 width: double.infinity,
                 child: Row(
                   children: [
-                    Image.asset("assets/images/aveter2-removebg-preview.png", width: 70, height: 70),
+                    Image.asset("assets/images/aveter2-removebg-preview.png",
+                        width: 70, height: 70),
                     const SizedBox(width: 20),
-                    const Column(
+                    Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Text(
-                          "Ali Rasmy ",
-                          style: TextStyle(
+                          userName,
+                          style: const TextStyle(
                             fontSize: 18,
                             fontWeight: FontWeight.w500,
                           ),
                         ),
-                        SizedBox(height: 10),
-                        Text(
+                        const SizedBox(height: 10),
+                        const Text(
                           "Father ",
                           style: TextStyle(
                             fontSize: 14,

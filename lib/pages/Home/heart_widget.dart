@@ -1,14 +1,13 @@
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
 
-class HeartRateWidget extends StatefulWidget {
-  const HeartRateWidget({super.key});
+class HeartRateWidget extends StatelessWidget {
+  final int heartRate;
+  final String emotion;
 
-  @override
-  State<HeartRateWidget> createState() => _HeartRateWidgetState();
-}
+  const HeartRateWidget(
+      {super.key, required this.heartRate, required this.emotion});
 
-class _HeartRateWidgetState extends State<HeartRateWidget> {
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -21,13 +20,13 @@ class _HeartRateWidgetState extends State<HeartRateWidget> {
       child: Stack(
         alignment: Alignment.topLeft,
         children: [
-          const Padding(
-            padding: EdgeInsets.symmetric(vertical: 15, horizontal: 15),
+          Padding(
+            padding: const EdgeInsets.symmetric(vertical: 15, horizontal: 15),
             child: Column(
               mainAxisAlignment: MainAxisAlignment.start,
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text(
+                const Text(
                   "Heart Rate",
                   style: TextStyle(
                     color: Colors.black,
@@ -36,8 +35,8 @@ class _HeartRateWidgetState extends State<HeartRateWidget> {
                   ),
                 ),
                 Text(
-                  "Normal: 78 BPM",
-                  style: TextStyle(
+                  "Normal: $heartRate BPM",
+                  style: const TextStyle(
                     color: Colors.grey,
                     fontSize: 18,
                   ),
@@ -53,9 +52,7 @@ class _HeartRateWidgetState extends State<HeartRateWidget> {
                 maxX: 10,
                 minY: 0,
                 maxY: 5,
-                gridData: const FlGridData(
-                  show: false,
-                ),
+                gridData: const FlGridData(show: false),
                 lineTouchData: LineTouchData(
                   enabled: true,
                   handleBuiltInTouches: true,
@@ -64,7 +61,7 @@ class _HeartRateWidgetState extends State<HeartRateWidget> {
                     getTooltipItems: (touchedSpots) {
                       return touchedSpots.map((touchedSpot) {
                         return LineTooltipItem(
-                          'Happy',
+                          emotion,
                           TextStyle(
                             color: Theme.of(context).primaryColor,
                             fontWeight: FontWeight.bold,
@@ -76,9 +73,7 @@ class _HeartRateWidgetState extends State<HeartRateWidget> {
                 ),
                 borderData: FlBorderData(
                   show: true,
-                  border: Border.all(
-                    color: Colors.transparent, // Adjust border color as needed
-                  ),
+                  border: Border.all(color: Colors.transparent),
                 ),
                 titlesData: const FlTitlesData(show: false),
                 lineBarsData: [
@@ -92,20 +87,12 @@ class _HeartRateWidgetState extends State<HeartRateWidget> {
                       const FlSpot(10, 3),
                     ],
                     isCurved: true,
-                    // colors: [
-                    //   Theme.of(context).primaryColor.withOpacity(0.2),
-                    //   Theme.of(context).primaryColor,
-                    // ], // Use colors instead of color
                     color: Theme.of(context).primaryColor,
                     barWidth: 6,
                     dotData: const FlDotData(show: false),
                     belowBarData: BarAreaData(
                       show: true,
                       color: Theme.of(context).primaryColor.withOpacity(0.2),
-                      // colors: [
-                      //   Theme.of(context).primaryColor.withOpacity(0.1),
-                      //   Theme.of(context).primaryColor.withOpacity(0.2),
-                      // ], // Adjust opacity as needed
                     ),
                   ),
                 ],

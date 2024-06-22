@@ -1,19 +1,19 @@
 import 'package:flutter/material.dart';
 
 class AgeWidget extends StatefulWidget {
-  const AgeWidget({super.key});
+  final Function(int) onAgeChanged;
+
+  const AgeWidget({super.key, required this.onAgeChanged});
 
   @override
   State<AgeWidget> createState() => _AgeWidgetState();
 }
 
 class _AgeWidgetState extends State<AgeWidget> {
-  int Age = 0;
+  int age = 0;
 
   @override
   Widget build(BuildContext context) {
-    final size = MediaQuery.of(context).size;
-
     return Container(
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(20),
@@ -23,17 +23,17 @@ class _AgeWidgetState extends State<AgeWidget> {
             color: Colors.grey.withOpacity(0.2),
             spreadRadius: 3,
             blurRadius: 10,
-            offset: const Offset(0, 2), // changes position of shadow
+            offset: const Offset(0, 2),
           ),
         ],
       ),
-      width: size.width * 0.3,
-      height: size.height * 0.2,
+      width: MediaQuery.of(context).size.width * 0.3,
+      height: MediaQuery.of(context).size.height * 0.2,
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
           Text(
-            "$Age",
+            "$age",
             style: const TextStyle(
               color: Colors.black,
               fontWeight: FontWeight.w500,
@@ -49,12 +49,22 @@ class _AgeWidgetState extends State<AgeWidget> {
           ),
           const SizedBox(height: 10),
           WeightButton(
-            onPressed: () => setState(() => Age++),
+            onPressed: () {
+              setState(() {
+                age++;
+              });
+              widget.onAgeChanged(age);
+            },
             icon: Icons.add,
-            label: '    Add   ',
+            label: '   Add    ',
           ),
           WeightButton(
-            onPressed: () => setState(() => Age--),
+            onPressed: () {
+              setState(() {
+                age--;
+              });
+              widget.onAgeChanged(age);
+            },
             icon: Icons.remove,
             label: 'Subtract',
           ),
