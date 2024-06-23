@@ -35,7 +35,7 @@ class HeartRateWidget extends StatelessWidget {
                   ),
                 ),
                 Text(
-                  "Normal: $heartRate BPM",
+                  "$emotion: $heartRate BPM",
                   style: const TextStyle(
                     color: Colors.grey,
                     fontSize: 18,
