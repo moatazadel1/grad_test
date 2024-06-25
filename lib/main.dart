@@ -15,7 +15,7 @@ void main() async {
   await FlutterConfig.loadEnvVariables();
 
   WidgetsFlutterBinding.ensureInitialized();
-await Firebase.initializeApp(
+  await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
   );
 
@@ -36,7 +36,6 @@ class _MyAppState extends State<MyApp> {
   Widget build(BuildContext context) {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
-      title: 'Flutter Demo',
       theme: ThemeData(
           appBarTheme: const AppBarTheme(
               color: Colors.transparent,

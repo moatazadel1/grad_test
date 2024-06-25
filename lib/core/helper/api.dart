@@ -65,10 +65,41 @@ class ApiService {
       await prefs.setString('token', token); // Save token
       await prefs.setString(
           'currentUserName', userName); // Save current user name
+      await prefs.setString(
+          'currentUserEmail', email); // Save current user email
 
       return responseData;
     } else {
       throw Exception('Failed to sign in: ${response.body}');
+    }
+  }
+
+  static Future<void> updateUserInfo(
+      String id, String name, String email, String password) async {
+    final url = Uri.parse('$_baseUrl/users/updateUserInfo');
+    final prefs = await SharedPreferences.getInstance();
+    final token = prefs.getString('token');
+
+    final response = await http.put(
+      url,
+      headers: {
+        'Content-Type': 'application/json',
+        'token': 'Bearer $token',
+      },
+      body: json.encode({
+        '_id': id,
+        'name': name,
+        'email': email,
+        'password': password,
+      }),
+    );
+
+    if (response.statusCode == 200) {
+      // Update email and name in shared preferences if needed
+      await prefs.setString('currentUserName', name);
+      await prefs.setString('currentUserEmail', email);
+    } else {
+      throw Exception('Failed to update user info: ${response.body}');
     }
   }
 
@@ -77,6 +108,7 @@ class ApiService {
     await prefs.setBool('isLoggedIn', false);
     await prefs.remove('token'); // Remove token
     await prefs.remove('currentUserName'); // Remove current user name
+    await prefs.remove('currentUserEmail'); // Remove current user email
   }
 
   static Future<void> addTask(String title, String description) async {
@@ -176,7 +208,7 @@ class ApiService {
     }
   }
 
-  final String baseUrl2 = 'https://5cc5-154-182-92-240.ngrok-free.app';
+  final String baseUrl2 = 'https://213c-154-182-94-98.ngrok-free.app';
 
   Future<List<Map<String, dynamic>>> postEmotion(
       List<Map<String, dynamic>> data) async {
@@ -215,6 +247,38 @@ class ApiService {
       log('Notification sent: ${responseData['message']}');
     } else {
       throw Exception('Failed to send notification: ${response.body}');
+    }
+  }
+
+  // New method to fetch user info by email
+  static Future<Map<String, dynamic>> getUserInfo(String email) async {
+    try {
+      final url = Uri.parse('$_baseUrl/users/getUserInfo?email=$email');
+      final response = await http.get(
+        url,
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      );
+
+      if (response.statusCode == 200) {
+        final data = json.decode(response.body);
+        return data;
+      } else {
+        throw Exception('Failed to fetch user info: ${response.body}');
+      }
+    } catch (e) {
+      throw Exception('Failed to fetch user info: $e');
+    }
+  }
+
+  static Future<String> fetchUserIdByEmail(String email) async {
+    try {
+      final userInfo = await getUserInfo(email);
+      final userId = userInfo['users'][0]['_id'];
+      return userId;
+    } catch (e) {
+      throw Exception('Failed to fetch user ID: $e');
     }
   }
 }

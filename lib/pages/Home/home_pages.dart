@@ -1,5 +1,4 @@
 import 'dart:developer';
-
 import 'package:flutter/material.dart';
 import 'package:new_app/core/helper/api.dart';
 import 'package:new_app/pages/Home/height_widget.dart';
@@ -24,7 +23,7 @@ class _HomePageState extends State<HomePage> {
   int weight = 70;
   String userName = "";
   int age = 0;
-  int heartRate = 150; // Initial heart rate, will be updated dynamically
+  int heartRate = 115; // Initial heart rate, will be updated dynamically
   String emotion = "Happy"; // Initial emotion, will be updated dynamically
   final ApiService apiService = ApiService();
 

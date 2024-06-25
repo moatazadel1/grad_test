@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:ionicons/ionicons.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:new_app/core/helper/api.dart';
 // Make sure these imports are correct
 import 'Widget/Button.dart';
 import 'Widget/setting_item.dart';
@@ -17,17 +18,26 @@ class AccountScreen extends StatefulWidget {
 
 class _AccountScreenState extends State<AccountScreen> {
   String userName = "";
+  String currentUserEmail = "";
+
   bool isDarkMode = false;
   @override
   void initState() {
     super.initState();
-    _loadUserName();
+    _loadUserDetails();
   }
 
-  Future<void> _loadUserName() async {
+  // Future<void> _loadUserName() async {
+  //   final prefs = await SharedPreferences.getInstance();
+  //   setState(() {
+  //     userName = prefs.getString('currentUserName') ?? 'User';
+  //   });
+  // }
+  Future<void> _loadUserDetails() async {
     final prefs = await SharedPreferences.getInstance();
     setState(() {
       userName = prefs.getString('currentUserName') ?? 'User';
+      currentUserEmail = prefs.getString('currentUserEmail') ?? 'Email';
     });
   }
 
